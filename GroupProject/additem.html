@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> Project - Group (1): Community Bank </title>
+	<link rel="stylesheet" type="text/css" href="style - Copy.css" />
+
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+	<script src="js/amazon-cognito-auth.min.js"></script>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+	<script src="js/amazon-cognito-identity.min.js"></script>  
+</head>
+
+<body>
+<div class="header">
+    <h1>Local Community Bank</h1>
+</div>
+
+<div class="row">
+  <div class="col-12 col-s-12 menu" id="navigator">
+    <ul>
+     <li>
+        <a href='index.html' id = "home"> HOME </a> 
+        <a href='about.html'> ABOUT </a> 
+        <a href='contact.html'> CONTACT </a>
+        <a href='additem.html'> ADD LISTING </a>
+        <a href='signup.html' id = "sign-up"> SIGN UP </a> 
+        <a href='login.html' id = "login"> LOGIN </a>
+	<a href='message.html' id = "message"> MESSAGE </a>
+        <a href='profile.html' id = "profile"> PROFILE </a> 
+        
+     </li>
+    </ul>
+  </div>
+
+  <div class="col-12 col-s-12" id="login_ui">
+    <h1> Register Item </h1>
+  
+  	<div id="warning">
+	  	<label>You must be logged in to register an item!</label>
+	  	<p class="small">Click <a class="body" id = "pwd_here" href="login.html">here</a> to login.</p>
+  	</div>
+
+    <form>
+    <table id = "login_table" style="display:none;">
+     
+       <tr>
+        <td><label id="userID" style="display:none;"></label></td>
+      </tr>
+
+      <tr>
+        <td><label>Owner Name :</label></td>
+        <td><label id="ownerName"></label></td>
+      </tr>
+
+     <tr>
+        <td><label> Item Name : </label></td>
+        <td><input type="text" id="iName"></td> 
+      </tr>
+
+        <!-- set button onClick method to call the function you want to handle this! -->
+      <tr>
+        <td><button id="add_button" type="button" onclick="add(document.getElementById('iName').value)">Register Item</button></td><td>&nbsp;</td>   
+      </tr>
+           
+      <tr>
+        <td><button id="add_button" type="button" onclick="myDelete(document.getElementById('iName').value)">Delete</button></td><td>&nbsp;</td>   
+      </tr>
+	   
+    </form>
+    </table>
+    <label id="register_result"></label>
+
+	  <h1 id="search_title"> Search Item </h1>
+    <form class="col-12 col-s-12">
+      <table id = "scanByItem_table" style="display:none;">
+        <tr>
+          <td><label> Item Name : </label></td>
+          <td><input type="text" id="scaniName"></td> 
+        </tr>
+          <!-- set button onClick method to call the function you want to handle this! -->
+        <tr>
+          <td><button id="add_button" type="button" onclick="myScan(document.getElementById('scaniName').value)">Search Owner</button></td><td>&nbsp;</td>   
+        </tr>
+      </table>
+    </form>
+    <label id="search_result"></label>
+
+    <h1 id="transfer_title"> Transfer Item </h1>
+    <form class="col-12 col-s-12">
+      <table id = "transfer_table" style="display:none; margin: auto;">
+        <tr>
+          <td><label> Item Name : </label></td>
+          <td><input type="text" id="tiName"></td> 
+        </tr>
+	<tr>
+          <td><label> Transfer ownership to : </label></td>
+          <td><input type="text" id="toName"></td> 
+        </tr>
+          <!-- set button onClick method to call the function you want to handle this! -->
+        <tr>
+          <td><button id="add_button" type="button" onclick="myUpdate(document.getElementById('tiName').value,document.getElementById('toName').value)">Transfer</button></td><td>&nbsp;</td>   
+        </tr>
+      </table>
+    </form>
+    <label id="transfer_result"></label>
+	  
+  </div>
+
+</div>
+
+<div class="col-12 col-s-12" id="main_footer">
+  <div class="footer">
+      <p> Sign up to your account and trade with others. </p>
+  </div>
+</div>
+
+<script>
+	// Cognito User
+
+	var poolData = {
+        UserPoolId : 'us-east-1_PcR9LMBcJ',
+        ClientId : '718sp5ac11tb8bmud2h8ulbd7'
+    };
+
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    var cognitoUser = userPool.getCurrentUser();
+	
+	window.onload = function(){
+	    if (cognitoUser != null) {
+	        cognitoUser.getSession(function(err, session) {
+	            if (err) {
+	                alert(err);
+	                return;
+	            }
+				cognitoUser.getUserAttributes(function(err, result) {
+					if (err) {
+						console.log(err);
+						return;
+					}
+					  console.log(result);
+            document.getElementById("ownerName").innerHTML = result[2].getValue();
+            document.getElementById("userID").innerHTML = result[0].getValue();
+            // hide nav items & warning
+            document.getElementById("warning").style.display = "none";
+            document.getElementById("login").style.display = "none";
+            document.getElementById("sign-up").style.display = "none";
+            // display form
+            document.getElementById("login_table").style.display = "table";
+            document.getElementById("profile").style.display = "inline";
+	          document.getElementById("scanByItem_table").style.display = "table";
+	          document.getElementById("transfer_table").style.display = "table";
+            document.getElementById("search_title").style.display = "block";
+            document.getElementById("transfer_title").style.display = "block";
+				});			
+			
+        	});
+    	}
+	}
+
+    // define the callAPI function that takes a item name and owner as parameters
+    
+    var add = (itemName)=>{
+	if(itemName!=''){
+		// get owner's name and unique userID
+		var userID = document.getElementById("userID").innerHTML;
+		var ownerName = document.getElementById("ownerName").innerHTML;
+		// instantiate a headers object
+		var myHeaders = new Headers();
+		// add content type header to object
+		myHeaders.append("Content-Type", "application/json");
+		// using built in JSON utility package turn object to string and store in a variable
+		var raw = JSON.stringify({"itemName":itemName,"ownerName":ownerName});
+		console.log(raw);
+		// create a JSON object with parameters for API call and store in a variable
+		var requestOptions = {
+		    method: 'POST',
+		    headers: myHeaders,
+		    body: raw,
+		    redirect: 'follow'
+		};
+		// make API call with parameters and use promises to get response
+		fetch("https://cweefqf1r9.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
+		.then(response => response.text())
+		.then(result => document.getElementById("register_result").innerHTML = itemName + " has been registered by " + ownerName)
+		.catch(error => console.log('error', error));
+	}
+    }
+	var myDelete = (item)=>{
+	    var owner=document.getElementById("ownerName").innerHTML;
+	    var myHeaders = new Headers();
+	    myHeaders.append("Content-Type", "application/json");
+	    var raw = JSON.stringify({"itemName":item,"ownerName":owner});
+	    var requestOptions = {
+		method: 'DELETE',
+		headers: myHeaders,
+		body: raw
+	    };
+	    fetch("https://6571n0x09g.execute-api.us-east-1.amazonaws.com/default/deleteItem", requestOptions)
+	    .then(response => response.text())
+	    .then(result => document.getElementById("register_result").innerHTML = item + " has been removed from " + owner)
+	    .catch(error => console.log('error', error));
+	}
+    var myQuery = (item)=>{
+        if(item!=''){
+		var owner=document.getElementById("ownerName").innerHTML;
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var requestOptions = {
+              method: 'GET',
+              headers: myHeaders,
+              mode: 'cors',
+              cache: 'default',
+            };
+            let params = {
+              "itemName": item,
+              "ownerName": owner
+            };
+            let query = Object.keys(params)
+                         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                         .join('&');
+            let url = 'https://lwqzgtjagb.execute-api.us-east-1.amazonaws.com/dev/searchItem?' + query;
+            fetch(url, requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+	}
+    }
+    var myScan = (item)=>{
+        if(item!=''){
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+            var requestOptions = {
+              method: 'GET',
+              headers: myHeaders,
+              mode: 'cors',
+              cache: 'default',
+            };
+            let params = {
+              "itemName": item
+            };
+            let query = Object.keys(params)
+                         .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                         .join('&');
+            let url = 'https://mx603yzem0.execute-api.us-east-1.amazonaws.com/default/scanByItem?' + query;
+            fetch(url, requestOptions)
+            .then(response => response.text())
+            .then(result => document.getElementById("search_result").innerHTML = item + " - " + (JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+        }
+
+    }
+    var myUpdate=(item,owner2)=>{
+    	if(item!=''){
+		myDelete(item);
+		var ownerName = owner2;
+		// instantiate a headers object
+		var myHeaders = new Headers();
+		// add content type header to object
+		myHeaders.append("Content-Type", "application/json");
+		// using built in JSON utility package turn object to string and store in a variable
+		var raw = JSON.stringify({"itemName":item,"ownerName":ownerName});
+		console.log(raw);
+		// create a JSON object with parameters for API call and store in a variable
+		var requestOptions = {
+		    method: 'POST',
+		    headers: myHeaders,
+		    body: raw,
+		    redirect: 'follow'
+		};
+		// make API call with parameters and use promises to get response
+		fetch("https://cweefqf1r9.execute-api.us-east-1.amazonaws.com/dev", requestOptions)
+		.then(response => response.text())
+		.then(result => document.getElementById("transfer_result").innerHTML = item + " has been transfered to " + ownerName)
+		.catch(error => console.log('error', error));
+	}
+    }
+
+
+</script>
+ 
+</body>
+</html>

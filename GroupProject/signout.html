@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Project - Group (1): Community Bank </title>
+  <link rel="stylesheet" type="text/css" href="style - Copy.css" />
+
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+  <script src="js/amazon-cognito-auth.min.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+  <script src="js/amazon-cognito-identity.min.js"></script>  
+
+</head>
+
+<body>
+<div class="header">
+    <h1>Local Community Bank</h1>
+</div>
+
+<div class="row">
+  <div class="col-12 col-s-12 menu" id="navigator">
+    <ul>
+     <li>
+        <a href='index.html' id = "home"> HOME </a> 
+        <a href='about.html'> ABOUT </a> 
+        <a href='contact.html'> CONTACT </a>
+        <a href='additem.html'> ADD LISTING </a>
+        <a href='message.html' id = "message"> MESSAGE </a>
+        <a href='signup.html' id = "sign-up"> SIGN UP </a> 
+        <a href='login.html' id = "login"> LOGIN </a> 
+        
+     </li>
+    </ul>
+  </div>
+
+  <div class="col-12 col-s-12" id="login_ui"> 
+    <h1> You have been signed out! </h1>
+
+    <p class="small"> Sign in again? Click <a class="body" id = "pwd_here" href="login.html">here</a> to sign in.</p>
+    <p class="small"> You do not have an account? Click <a class="body" id = "acc_here" href="signup.html">here</a> to register. </p>
+  </div>
+
+</div>
+
+<div class="col-12 col-s-12" id="main_footer">
+  <div class="footer">
+      <p> Sign up to your account and trade with others. </p>
+  </div>
+</div>
+
+</body>
+</html>

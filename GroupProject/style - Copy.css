@@ -1,0 +1,304 @@
+/* Referenced this tutorial about scrolling animation: https://mp.weixin.qq.com/s/e5QmpdFr8vkR5Y9MYKWelA */
+
+/* Some parts of the code are referened from the template provided from Canvas */
+/* Reused CSS from W3Schools */
+
+
+body {
+  background-color: white;
+  text-align: left;
+  color: Black;
+  font-family: Optima;
+  margin-top: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  font-family: Arial, sans-serif;
+
+}
+* {
+  box-sizing: border-box;
+}
+
+
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+[class*="col-"] {
+  float: left;
+  padding: 15px;
+}
+
+html {
+  font-family: Optima;
+}
+
+a.body:link{
+  text-decoration: none;
+  color: #33b5e5;
+}
+
+a:link {
+  text-decoration: none;
+  color: #ffffff;
+}
+a:visited {
+  text-decoration: none;
+  color: #ffffff;
+}
+a:hover {
+  text-decoration: none;
+  color: #757777;
+}
+
+.header {
+  background-color: #111;
+  color: #ffffff;
+  padding: 15px;
+}
+
+.menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu li {
+  padding: 8px;
+  margin-bottom: 7px;
+  background-color: #111;
+  color: #ffffff;
+  /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+}
+
+.menu li:hover {
+  background-color: #111;
+}
+
+.aside {
+  /* background-color: #33b5e5; */
+  padding: 15px;
+  color: #111111;
+  text-align: center;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); */
+}
+
+.footer {
+  background-color: rgb(6, 28, 37);;
+  color: #ffffff;
+  text-align: center;
+  font-size: 12px;
+  padding: 15px;
+}
+
+p.small {
+   font-size: 12px;
+   
+}
+
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .col-s-1 {width: 8.33%;}
+  .col-s-2 {width: 16.66%;}
+  .col-s-3 {width: 25%;}
+  .col-s-4 {width: 33.33%;}
+  .col-s-5 {width: 41.66%;}
+  .col-s-6 {width: 50%;}
+  .col-s-7 {width: 58.33%;}
+  .col-s-8 {width: 66.66%;}
+  .col-s-9 {width: 75%;}
+  .col-s-10 {width: 83.33%;}
+  .col-s-11 {width: 91.66%;}
+  .col-s-12 {width: 100%;}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
+
+/* [Edited] CSS Template from : https://www.w3schools.com/css/tryit.asp?filename=tryresponsive_breakpoints */
+
+/* index.html */
+
+#navigator {
+  background-color: #111111;
+  padding-bottom: 2%;
+}
+
+.menu a {
+  text-decoration: none;
+  list-style-type: none;
+  font-size: 20px;
+  margin-left: 10%;
+  position: relative;
+}
+
+#slogan{
+  color: #111111;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: 6rem 0;
+}
+
+#slogan2{
+  color: #888888;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin: 6rem 0;
+}
+
+#login{
+  /* padding: 20px 0; */
+  background-color: #888888;
+  border-style:solid;
+  border-color: #888888;
+
+}
+
+#profile{
+  /* padding: 20px 0; */
+  display: none;
+  background-color: #888888;
+  border-style:solid;
+  border-color: #888888;
+
+}
+
+#examples{
+  background-color: #111111;
+}
+
+
+
+.images {
+  text-align: center;
+  display: block;
+}
+
+#main_footer{
+  padding:0;
+}
+
+/* about.html */
+
+#about{
+  display: block;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+/* contact.html */
+
+#contact{
+  display: block;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+}
+
+/* login.html */
+
+#login_ui {
+  display: block;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+}
+
+/* how to make a table center: https://www.w3schools.com/howto/howto_css_table_center.asp */
+#login_table
+{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#scanByItem_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#pwd_here
+{
+  color: #888;
+}
+
+#acc_here
+{
+  color: #888;
+}
+
+#login_button
+{
+  font-size: 20px;
+  margin: 0;
+  position: relative;
+  top: 51%;
+  left: 80%;
+  padding: 5%;
+}
+
+/* scrolling animation */
+#ui {
+  position: relative;
+  /* top: 0; */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#ui ul {
+  /* list-style: none; */
+  margin: 0;
+  padding: 0;
+  --progress: 0;
+}
+
+#ui img {
+  display: block;
+  text-align: center;
+  margin: auto;
+  transform: scale(calc(2.0 - ( var(--progress)))) translateY(calc(-60px * (1 - var(--progress))));
+  opacity: var(--progress);
+}
+
+#transfer_title {
+  display: none;
+  padding-top: 10px;
+}
+
+#search_title {
+  display: none;
+  padding-top: 10px;
+}

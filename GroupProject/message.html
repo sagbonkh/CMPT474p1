@@ -1,0 +1,188 @@
+<!DOCTYPE html> 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Project - Group (1): Community Bank </title>
+    <link rel="stylesheet" type="text/css" href="style - Copy.css" />
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+    <script src="js/amazon-cognito-auth.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+    <script src="js/amazon-cognito-identity.min.js"></script>  
+</head>
+
+<body>
+<div class="header">
+    <h1>Local Community Bank</h1>
+</div>
+
+
+<div class="row">
+  <div class="col-12 col-s-12 menu" id="navigator">
+    <ul>
+     <li>
+        <a href='index.html' id = "home"> HOME </a> 
+        <a href='about.html'> ABOUT </a> 
+        <a href='contact.html'> CONTACT </a>
+        <a href='additem.html'> ADD LISTING </a>
+        <a href='message.html' id = "message"> MESSAGE </a> 
+	<a href='signup.html' id = "sign-up"> SIGN UP </a> 
+        <a href='login.html' id = "login"> LOGIN </a>
+        <a href='profile.html' id = "profile"> PROFILE </a> 
+        
+     </li>
+    </ul>
+  </div>
+
+  <div class="col-12 col-s-12" id="login_ui">
+    <h1> Message </h1>
+  
+  	<div id="warning">
+	  	<label>You must be logged in to check/send a message</label>
+	  	<p class="small">Click <a class="body" id = "pwd_here" href="login.html">here</a> to login.</p>
+  	</div>
+
+    <form>
+    <table id = "login_table" style="display:none;">
+    <!-- <table id = "login_table"> -->
+     
+      <!-- <tr>
+        <td><label id="userID" style="display:none;"></label></td>
+        <td><label id="userID" ></label></td>
+      </tr> -->
+
+      <tr>
+        <td><button id="add_button" type="button" onclick="query()">Check Message</button></td><td>&nbsp;</td>   
+      </tr>
+
+      <tr>
+        <td><label> Receiver Name: </label></td>
+        <td><input type="text" id="messageReceiver"></td>
+      </tr>
+
+      <tr>
+        <td><label> Message: </label></td>
+        <td><input type="text" id="outgoing_message"></label></td>
+      </tr>
+        
+      <tr>
+        <td><button id="add_button" type="button" onclick="call_sendMessage_API(document.getElementById('messageReceiver').value,document.getElementById('outgoing_message').value)">Send Message</button></td><td>&nbsp;</td>   
+      </tr>
+      
+
+    </form>
+    </table>
+    
+  </div>
+
+</div>
+
+<p id="demo"></p>
+
+<div class="col-12 col-s-12" id="main_footer">
+    <div class="footer">
+        <p> Sign up to your account and trade with others. </p>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+<script>
+    var current_user_ID = "";
+
+    var poolData = {
+        UserPoolId : 'us-east-1_PcR9LMBcJ',
+        ClientId : '718sp5ac11tb8bmud2h8ulbd7'
+    };
+  
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    var cognitoUser = userPool.getCurrentUser();
+      
+      window.onload = function(){
+      if (cognitoUser != null) {
+        cognitoUser.getSession(function(err, session) {
+            if (err) {
+                alert(err);
+                return;
+            }
+  
+        cognitoUser.getUserAttributes(function(err, result) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            
+            console.log(result);
+            current_user_ID = result[2].getValue();
+            // display profile link and disable login/signup
+            document.getElementById("login").style.display = "none";
+            document.getElementById("sign-up").style.display = "none";
+            document.getElementById("profile").style.display = "inline";
+            document.getElementById("message").style.display = "inline";
+	    document.getElementById("login_table").style.display = "table";
+	    document.getElementById("warning").style.display = "none";
+            });			
+        });
+      }
+    }
+
+    var call_sendMessage_API = (messageReceiver,message)=>{
+
+            
+            // instantiate a headers object
+            var myHeaders = new Headers();
+            // add content type header to object
+            myHeaders.append("Content-Type", "application/json");
+            // using built in JSON utility package turn object to string and store in a variable
+            var raw = JSON.stringify({"sendFrom":current_user_ID,"sendTo":messageReceiver, "message":message});
+            // create a JSON object with parameters for API call and store in a variable
+            console.log(raw);
+          
+
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: raw,
+                redirect: 'follow'
+            };
+
+            // make API call with parameters and use promises to get response
+            fetch("https://rshna8dl2k.execute-api.us-east-1.amazonaws.com/dev/", requestOptions)
+            .then(response => response.text())
+            .then(result => alert(JSON.parse(result).body))
+            .catch(error => console.log('error', error));
+	    
+	    document.getElementById("messageReceiver").value="";
+            document.getElementById("outgoing_message").value="";
+        }
+    
+    var query = ()=>{
+        
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        var requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          mode: 'cors',
+          cache: 'default',
+        };
+        let params = {
+          "current_user": current_user_ID
+        };
+        console.log(params);
+        let query = Object.keys(params)
+                      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+                      .join('&');
+        let url = "https://ww427phcoe.execute-api.us-east-1.amazonaws.com/dev/checkMessage?" + query;
+        console.log(url);
+        console.log(query);
+        fetch(url, requestOptions)
+        .then(response => response.text())
+        .then(result => alert(JSON.parse(result).body))
+        .catch(error => console.log('error', error));
+        
+    }
+    
+</script>

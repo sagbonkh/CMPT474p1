@@ -1,0 +1,145 @@
+<!-- Referenced this tutorial about scrolling animation: https://mp.weixin.qq.com/s/e5QmpdFr8vkR5Y9MYKWelA -->
+<!-- How to make a table center: https://www.w3schools.com/howto/howto_css_table_center.asp -->
+
+<!DOCTYPE html> 
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Project - Group (1): Community Bank </title>
+    <link rel="stylesheet" type="text/css" href="style - Copy.css" />
+
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+    <script src="js/amazon-cognito-auth.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+    <script src="js/amazon-cognito-identity.min.js"></script>  
+</head>
+
+<body>
+<div class="header">
+    <h1>Local Community Bank</h1>
+</div>
+
+
+<div class="row">
+  
+    <div class="col-12 col-s-12 menu" id="navigator">
+        <ul>
+         <li>
+            <a href='index.html' id = "home"> HOME </a> 
+            <a href='about.html'> ABOUT </a> 
+            <a href='contact.html'> CONTACT </a>
+            <a href='additem.html'> ADD LISTING </a>
+            <a href='signup.html' id = "sign-up"> SIGN UP </a> 
+            <a href='login.html' id = "login"> LOGIN </a>
+            <a href='message.html' id = "message"> MESSAGE </a>
+            <a href='profile.html' id = "profile"> PROFILE </a> 
+            
+         </li>
+        </ul>
+    </div>
+
+    <div class="col-12 col-s-12 menu" id="slogan">
+        A place for you to trade what you need
+    </div>
+
+    <div class="col-12 col-s-12 menu" id="examples">
+        <div class="col-12 col-s-12 menu" id="slogan2">
+            Don't know how to deal with spare items?
+        </div>
+
+        <div class="col-12 col-s-12 menu" id="ui">              
+            <ul>
+            <li>
+                <img src="IMG_6639.jpg" width="620" height="500"/>
+            </li>
+
+            <li>
+                <img src="IMG_6641.jpg" width="620" height="500"/>
+            </li>
+
+            <li>
+                <img src="IMG_6644.jpg" width="620" height="500"/>
+            </li>
+            </ul>
+        </div>
+    </div>
+
+    
+
+    <div class="col-12 col-s-12">
+        <div class="aside">
+        <h2>What?</h2>
+        <p>This is a local community bank that people can borrow/lend/trade things.</p>
+        <h2>Why?</h2>
+        <p>Spare items take space and buying something costs more than borrowing.</p>
+        <h2>How?</h2>
+        <p>Find your desired item or get your spare items prepared, deal with local owners/borrowers face-to-face.</p>
+        </div>
+    </div>
+  
+</div>
+
+<div class="col-12 col-s-12" id="main_footer">
+    <div class="footer">
+        <p> Sign up to your account and trade with others. </p>
+    </div>
+</div>
+
+
+<script>
+    const rows = document.querySelectorAll('#ui ul li')
+    const html = document.documentElement
+
+    document.addEventListener('scroll', (e) => {
+    let scrolled = html.scrollTop / (html.scrollHeight - html.clientHeight)
+    
+    let total =  1 / rows.length
+    
+    for (let [index, row] of rows.entries()) {
+        let start = total * index
+        let end = total * (index + 1)
+        
+        let progress = (scrolled - start) / (end - start)
+        if (progress >= 1) progress = 1
+        if (progress <= 0) progress = 0
+        
+        row.style.setProperty('--progress', progress)
+    }
+    })
+</script>
+
+</body>
+</html>
+
+<script>
+    var poolData = {
+        UserPoolId : 'us-east-1_PcR9LMBcJ',
+        ClientId : '718sp5ac11tb8bmud2h8ulbd7'
+    };
+  
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+    var cognitoUser = userPool.getCurrentUser();
+      
+      window.onload = function(){
+      if (cognitoUser != null) {
+        cognitoUser.getSession(function(err, session) {
+          if (err) {
+            alert(err);
+            return;
+          }
+  
+          cognitoUser.getUserAttributes(function(err, result) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            // display profile link and disable login/signup
+            document.getElementById("login").style.display = "none";
+            document.getElementById("sign-up").style.display = "none";
+            document.getElementById("profile").style.display = "inline";
+      
+            });			
+        });
+      }
+    }
+  </script>

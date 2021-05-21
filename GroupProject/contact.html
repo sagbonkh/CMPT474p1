@@ -1,0 +1,89 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Project - Group (1): Community Bank </title>
+  <link rel="stylesheet" type="text/css" href="style - Copy.css" />
+
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script> 
+  <script src="js/amazon-cognito-auth.min.js"></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script> 
+  <script src="js/amazon-cognito-identity.min.js"></script> 
+</head>
+
+<body>
+<div class="header">
+    <h1>Local Community Bank</h1>
+</div>
+
+<div class="row">
+  <div class="col-12 col-s-12 menu" id="navigator">
+    <ul>
+     <li>
+        <a href='index.html' id = "home"> HOME </a> 
+        <a href='about.html'> ABOUT </a> 
+        <a href='contact.html'> CONTACT </a>
+        <a href='additem.html'> ADD LISTING </a>
+        <a href='signup.html' id = "sign-up"> SIGN UP </a> 
+        <a href='login.html' id = "login"> LOGIN </a>
+        <a href='message.html' id = "message"> MESSAGE </a>
+        <a href='profile.html' id = "profile"> PROFILE </a>  
+        
+     </li>
+    </ul>
+  </div>
+
+  <div class="col-12 col-s-12" id=contact>
+    <h1> Contact </h1>
+    <h3> For further technical support, please contact CMPT 474 Group 1 members </h3>
+    <ul>
+      <div> <i> Sidney </i> </div>
+      <div> <i> Yixuan </i> </div>
+      <div> <i> Thinesh </i> </div>
+      <div> <i> Justin </i> </div>
+      <div> <i> Zhenyu </i> </div>
+     </ul>
+  </div>
+
+
+<div class="col-12 col-s-12" id="main_footer">
+  <div class="footer">
+      <p> Sign up to your account and trade with others. </p>
+  </div>
+</div>
+
+</body>
+</html>
+
+<script>
+  var poolData = {
+      UserPoolId : 'us-east-1_PcR9LMBcJ',
+      ClientId : '718sp5ac11tb8bmud2h8ulbd7'
+  };
+
+  var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+  var cognitoUser = userPool.getCurrentUser();
+    
+    window.onload = function(){
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function(err, session) {
+        if (err) {
+          alert(err);
+          return;
+        }
+
+        cognitoUser.getUserAttributes(function(err, result) {
+          if (err) {
+              console.log(err);
+              return;
+          }
+          // display profile link and disable login/signup
+          document.getElementById("login").style.display = "none";
+          document.getElementById("sign-up").style.display = "none";
+          document.getElementById("profile").style.display = "inline";
+    
+          });			
+      });
+    }
+  }
+</script>
